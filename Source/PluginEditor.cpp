@@ -1,44 +1,58 @@
-#pragma once
-#include <juce_gui_basics/juce_gui_basics.h>
-#include <juce_audio_processors/juce_audio_processors.h>
-#include "PluginProcessor.h"
+#include "PluginEditor.h"
 
-class SpectrumDisplay : public juce::Component, public juce::Timer
+SpectrumDisplay::SpectrumDisplay (SmartEQAudioProcessor& p) : proc (p)
 {
-public:
-    explicit SpectrumDisplay (SmartEQAudioProcessor& p) : proc (p) { startTimerHz (30); }
-    void paint (juce::Graphics&) override;
-    void timerCallback() override { repaint(); }
-private:
-    SmartEQAudioProcessor& proc;
-};
+    startTimerHz (30);
+}
 
-class WarningPanel : public juce::Component, public juce::Timer
+void SpectrumDisplay::paint (juce::Graphics& g)
 {
-public:
-    explicit WarningPanel (SmartEQAudioProcessor& p) : proc (p) { startTimerHz (4); }
-    void paint (juce::Graphics&) override;
-    void timerCallback() override { repaint(); }
-private:
-    SmartEQAudioProcessor& proc;
-};
+    g.fillAll (juce::Colours::black);
+    g.setColour (juce::Colours::lightblue);
+    g.drawText ("Spectrum", getLocalBounds(), juce::Justification::centred, true);
+}
 
-class SmartEQAudioProcessorEditor : public juce::AudioProcessorEditor
+void SpectrumDisplay::timerCallback()
 {
-public:
-    explicit SmartEQAudioProcessorEditor (SmartEQAudioProcessor&);
-    ~SmartEQAudioProcessorEditor() override = default;
+    repaint();
+}
 
-    void paint (juce::Graphics&) override;
-    void resized() override;
+WarningPanel::WarningPanel (SmartEQAudioProcessor& p) : proc (p)
+{
+    startTimerHz (4);
+}
 
-private:
-    SmartEQAudioProcessor& proc;
-    SpectrumDisplay spectrum;
-    WarningPanel    warnings;
+void WarningPanel::paint (juce::Graphics& g)
+{
+    g.fillAll (juce::Colours::darkgrey);
+    g.setColour (juce::Colours::white);
+    g.drawText ("Warnings", getLocalBounds(), juce::Justification::centred, true);
+}
 
-    juce::OwnedArray<juce::Slider> freqSl, gainSl, qSl;
-    juce::OwnedArray<juce::ToggleButton> onBtn;
-    juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment> freqAtt, gainAtt, qAtt;
-    juce::OwnedArray<juce::AudioProcessorValueTreeState::ButtonAttachment> onAtt;
-};
+void WarningPanel::timerCallback()
+{
+    repaint();
+}
+
+SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor (SmartEQAudioProcessor& p)
+    : juce::AudioProcessorEditor (&p),
+      proc (p),
+      spectrum (p),
+      warnings (p)
+{
+    setSize (600, 400);
+    addAndMakeVisible (spectrum);
+    addAndMakeVisible (warnings);
+}
+
+void SmartEQAudioProcessorEditor::paint (juce::Graphics& g)
+{
+    g.fillAll (juce::Colours::darkslategrey);
+}
+
+void SmartEQAudioProcessorEditor::resized()
+{
+    auto area = getLocalBounds().reduced (10);
+    spectrum.setBounds (area.removeFromTop (area.getHeight() * 0.7f));
+    warnings.setBounds (area);
+}
