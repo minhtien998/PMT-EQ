@@ -23,6 +23,8 @@ juce_add_plugin(SmartEQ
     PRODUCT_NAME "Smart EQ"
 )
 
+juce_generate_juce_header(SmartEQ)
+
 target_sources(SmartEQ PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginEditor.cpp
