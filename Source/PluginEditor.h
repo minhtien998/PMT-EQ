@@ -5,9 +5,9 @@
 class SpectrumDisplay : public juce::Component, public juce::Timer
 {
 public:
-    explicit SpectrumDisplay (SmartEQAudioProcessor& p) : proc (p) { startTimerHz (30); }
+    explicit SpectrumDisplay (SmartEQAudioProcessor& p);
     void paint (juce::Graphics&) override;
-    void timerCallback() override { repaint(); }
+    void timerCallback() override;
 private:
     SmartEQAudioProcessor& proc;
 };
@@ -15,9 +15,9 @@ private:
 class WarningPanel : public juce::Component, public juce::Timer
 {
 public:
-    explicit WarningPanel (SmartEQAudioProcessor& p) : proc (p) { startTimerHz (4); }
+    explicit WarningPanel (SmartEQAudioProcessor& p);
     void paint (juce::Graphics&) override;
-    void timerCallback() override { repaint(); }
+    void timerCallback() override;
 private:
     SmartEQAudioProcessor& proc;
 };
