@@ -14,23 +14,23 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
       - name: Cache JUCE
         uses: actions/cache@v4
         with:
           path: build/_deps
           key: juce-${{ runner.os }}-${{ hashFiles('CMakeLists.txt') }}
 
-      # BƯỚC MỚI THÊM: Cài đặt môi trường Visual Studio cho GitHub Actions
-      - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
-
+      # SỬA LẠI BƯỚC NÀY: Dùng Ninja thay vì Visual Studio
       - name: Configure CMake
-        run: cmake -B build -G "Visual Studio 17 2022" -A x64
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 
       - name: Build Release
-        run: cmake --build build --config Release --parallel
+        run: cmake --build build
 
       - name: Verify VST3 exists
         shell: pwsh
