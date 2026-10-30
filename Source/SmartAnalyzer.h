@@ -14,9 +14,10 @@ public:
     {
         juce::String category;
         juce::String message;
-        float lowFreq = 0, highFreq = 0;
-        float centerFreq = 0;
-        float amountDb = 0;
+        float lowFreq = 0.0f;
+        float highFreq = 0.0f;
+        float centerFreq = 0.0f;
+        float amountDb = 0.0f;
         bool  isExcess = false;
     };
 
@@ -48,13 +49,12 @@ private:
     std::vector<float> fftData;
     std::vector<float> ring;
     int ringWrite = 0;
-    int hopCount  = 0;
+    int hopCount = 0;
     static constexpr int hopSize = 512;
 
     std::vector<float> fastDb;
     std::vector<float> longTermDb;
     std::vector<float> targetDb;
-
     std::vector<Warning> warnings;
 
     mutable std::mutex lock;
