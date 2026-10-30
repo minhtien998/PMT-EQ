@@ -20,7 +20,11 @@ public:
         bool  isExcess = false;
     };
 
-    SmartAnalyzer();
+    SmartAnalyzer()
+        : fft (fftOrder),
+          window (fftSize, juce::dsp::WindowingFunction<float>::hann)
+    {
+    }
 
     void prepare (double sampleRate);
     void pushAudio (const float* left, const float* right, int numSamples);
@@ -32,7 +36,9 @@ public:
     std::vector<Warning> getWarnings() const;
 
     float binToFreq (int bin) const
-    { return bin * (float)sampleRate / (float)fftSize; }
+    {
+        return bin * (float) sampleRate / (float) fftSize;
+    }
 
 private:
     double sampleRate = 48000.0;
