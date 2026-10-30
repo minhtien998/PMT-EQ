@@ -1,7 +1,5 @@
 #include "SmartAnalyzer.h"
 
-SmartAnalyzer::SmartAnalyzer() = default;
-
 void SmartAnalyzer::prepare(double sampleRate)
 {
     std::lock_guard<std::mutex> lockGuard (lock);
